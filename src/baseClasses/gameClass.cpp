@@ -24,7 +24,7 @@ Game::~Game()
 void Game::Init()
 {
     // load shaders
-    ResourceManager::LoadShader("/Users/anthony/discardedFire/assets/shaders/vertexshader.vertex", "/Users/anthony/discardedFire/assets/shaders/fragmentShader.fragment", nullptr, "sprite");
+    ResourceManager::LoadShader(load_asset("/shaders/vertexshader.vertex").c_str(), load_asset("/shaders/fragmentShader.fragment").c_str(), nullptr, "sprite");
     // configure shaders
 
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);

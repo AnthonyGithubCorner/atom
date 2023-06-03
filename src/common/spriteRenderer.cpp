@@ -53,12 +53,12 @@ void SpriteRenderer::initRenderData()
 {
      unsigned int VBO;
     GLfloat vertices[] = {
-        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 
-        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f
+        0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f
     };
 
     glGenVertexArrays(1, &this->quadVAO);
@@ -71,15 +71,11 @@ void SpriteRenderer::initRenderData()
 
     GLint posAttrib = glGetAttribLocation(this->shader.ID, "vertex");
     glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-
-    GLint colorAttrib = glGetAttribLocation(this->shader.ID, "color");
-    glEnableVertexAttribArray(colorAttrib);
-    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),  (void*)(3*sizeof(float)));
+    glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 
     GLint uvAttrib = glGetAttribLocation(this->shader.ID, "UV");
     glEnableVertexAttribArray(uvAttrib);
-    glVertexAttribPointer(uvAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),  (void*)(6*sizeof(float)));
+    glVertexAttribPointer(uvAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),  (void*)(3*sizeof(float)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
