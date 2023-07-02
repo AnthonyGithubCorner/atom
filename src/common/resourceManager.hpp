@@ -17,6 +17,7 @@
 #include "texture.hpp"
 #include "shader.hpp"
 #include "gameObject.hpp"
+#include "gameObject3D.hpp"
 #include "SDL_surface.h"
 
 
@@ -34,6 +35,7 @@ public:
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
     static std::map<std::string, gameObject*> gameObjects;
+    static std::map<std::string, gameObject3D*> gameObjects3D;
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
     static Shader    LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
     // retrieves a stored sader
@@ -46,6 +48,10 @@ public:
     static gameObject* LoadGameObject(SpriteRenderer *spriteRender, const char *file, bool alpha, std::string name, SDL_FRect initRect = {0,0,0.1f,0.1f});
 
     static gameObject* getGameObject(std::string name);
+
+    static gameObject3D* LoadGameObject3D(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect = {0,0,0.1f,0.1f});
+
+    static gameObject3D* getGameObject3D(std::string name);
 
     // load texture from surface used for text
     static Texture2D loadTextureFromSDL2Surface(SDL_Surface* Surface);

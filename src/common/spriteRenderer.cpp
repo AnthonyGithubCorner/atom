@@ -45,7 +45,10 @@ void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec
     texture.Bind();
 
     glBindVertexArray(this->quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Draw a rectangle from the 2 triangles using 6 indices
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     glBindVertexArray(0);
 }
 
@@ -60,6 +63,14 @@ void SpriteRenderer::initRenderData()
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         1.0f, 0.0f, 0.0f, 1.0f, 0.0f
     };
+    GLuint vbo;
+    glGenBuffers(1, &vbo); // Generate 1 buffer
+    // The following commands will talk about our 'bvo' buffer
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // Give our vertices to OpenGL.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
 
     glGenVertexArrays(1, &this->quadVAO);
     glGenBuffers(1, &VBO);
@@ -76,6 +87,19 @@ void SpriteRenderer::initRenderData()
     GLint uvAttrib = glGetAttribLocation(this->shader.ID, "UV");
     glEnableVertexAttribArray(uvAttrib);
     glVertexAttribPointer(uvAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),  (void*)(3*sizeof(float)));
+
+    // Create an element array
+    GLuint ebo;
+    glGenBuffers(1, &ebo);
+
+    GLuint elements[] = {
+        0, 1, 2,
+        3, 4, 5,
+    };
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }

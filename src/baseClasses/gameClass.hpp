@@ -1,4 +1,5 @@
 #include "../common/gameObject.hpp"
+#include "../common/gameObject3D.hpp"
 #include <vector>
 // Represents the current state of the game
 enum GameState {
@@ -12,6 +13,7 @@ class Game
     public:
         SpriteRenderer  *Renderer;
         SpriteRenderer  *TextRenderer;
+        ModelRenderer   *Renderer3D;
         // game state
         GameState    State;	
         bool         Keys[1024];

@@ -21,6 +21,7 @@
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::map<std::string, gameObject*>       ResourceManager::gameObjects;
+std::map<std::string, gameObject3D*>       ResourceManager::gameObjects3D;
 
 
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
@@ -56,6 +57,17 @@ gameObject* ResourceManager::getGameObject(std::string name){
     return gameObjects[name];
 }
 
+gameObject3D* ResourceManager::LoadGameObject3D(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect)
+{
+    LoadTexture(file, alpha, name);
+    gameObjects3D[name] = new gameObject3D(modelRender, name, initRect);
+
+    return gameObjects3D[name];
+}
+gameObject3D* ResourceManager::getGameObject3D(std::string name){
+    return gameObjects3D[name];
+}
+
 void ResourceManager::Clear()
 {
     // (properly) delete all shaders	
@@ -65,6 +77,8 @@ void ResourceManager::Clear()
     for (auto iter : Textures)
         glDeleteTextures(1, &iter.second.ID);
     for (auto iter : gameObjects)
+        delete (iter.second);
+    for (auto iter : gameObjects3D)
         delete (iter.second);
 }
 

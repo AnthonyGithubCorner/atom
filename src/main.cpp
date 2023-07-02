@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     }
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     Mix_Music * _gMusic = Mix_LoadMUS(load_asset("/song.mp3").c_str());
-    Mix_PlayMusic(_gMusic, -1);
+//    Mix_PlayMusic(_gMusic, -1);
     SDL_Window *window = SDL_CreateWindow(
         "An SDL2 window",       // window title
         SDL_WINDOWPOS_CENTERED, // initial x position
@@ -213,16 +213,15 @@ int main(int argc, char *argv[])
         
         // update game state
         // -----------------
-        // Breakout.Update(deltaTime);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ResourceManager::getGameObject("bg")->Render();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        ResourceManager::getGameObject("bg")->Render();
         // ResourceManager::getGameObject("face")->Render();
 
-        ResourceManager::getGameObject("frog")->Render();
-        SDL_FRect textRect = {0.1f, 0.4f, 0.8f, 0.7f};
-        dialogue_test->render_dialogue(textRect, Breakout.Renderer,window,basic_word_renderer, button_word_renderer, excited_word_renderer);
-
-
+//        ResourceManager::getGameObject("frog")->Render();
+//        SDL_FRect textRect = {0.1f, 0.4f, 0.8f, 0.7f};
+//        dialogue_test->render_dialogue(textRect, Breakout.Renderer,window,basic_word_renderer, button_word_renderer, excited_word_renderer);
+//        ResourceManager::getGameObject3D("testModel")->setColor(glm::vec3(0.5f,0.3f,0.2f));
+        ResourceManager::getGameObject3D("testModel")->Render();
         // Update screen
         
         
