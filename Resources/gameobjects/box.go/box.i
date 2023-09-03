@@ -1,0 +1,28 @@
+IF START
+disableRender( box )
+disableActions( box )
+selectAnim( folding_corner )
+IF KEYP
+ENDIF
+CLEAR ENTERKEYE
+CLEAR HOLDINGKEYE
+CLEAR ANIMRUNNING
+
+CLEAR START
+ENDIF
+
+FUNC anim
+nextFrame( )
+ONQUIT
+enableRender( player )
+CLEAR ANIMRUNNING
+ENDONQUIT
+
+ENDFUNC
+
+
+
+IF KEYE AND !ANIMRUNNING
+SET ANIMRUNNING
+EXCIN anim constant 4 1000
+ENDIF

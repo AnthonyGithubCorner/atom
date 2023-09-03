@@ -17,25 +17,35 @@
 #include "texture.hpp"
 #include "shader.hpp"
 #include "gameObject.hpp"
-#include "gameObject3D.hpp"
+#include "animatedGameObject.hpp"
 #include "SDL_surface.h"
-
+#include "gameObject.hpp"
+#include "../UI/dialogue/word_renderer/word_renderer.hpp"
 
 // A static singleton ResourceManager class that hosts several
 // functions to load Textures and Shaders. Each loaded texture
 // and/or shader is also stored for future reference by string
 // handles. All functions and resources are static and no 
 // public constructor is defined.
-
+// The Width of the screen
+extern int SCREEN_WIDTH;
+// The height of the screen
+extern int SCREEN_HEIGHT;
 
 class ResourceManager
 {
 public:
     // resource storage
+    static std::map<std::string, ModelRenderer*> ModelRenderers;
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
     static std::map<std::string, gameObject*> gameObjects;
-    static std::map<std::string, gameObject3D*> gameObjects3D;
+    static std::map<std::string, WordRenderer*> WordRenderers;
+    static std::map<std::string, std::vector<std::string>> Dialogues;
+
+    static ModelRenderer* LoadModelRenderer(Shader &shader, const char *modelOBJfile, std::string name);
+    static ModelRenderer* GetModelRenderer(std::string name);
+
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
     static Shader    LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
     // retrieves a stored sader
@@ -45,16 +55,19 @@ public:
     // retrieves a stored texture
     static Texture2D GetTexture(std::string name);
 
-    static gameObject* LoadGameObject(SpriteRenderer *spriteRender, const char *file, bool alpha, std::string name, SDL_FRect initRect = {0,0,0.1f,0.1f});
+    // Loads the gameobjects
+    static gameObject* LoadGameObject(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect, uint8_t level);
+    static gameObject* LoadGameObject(ModelRenderer *modelRender, std::map<std::string, std::vector<ModelRenderer*>> model_animations, const char *file, bool alpha, std::string name, SDL_FRect initRect, uint8_t level, SDL_FRect triggerRect);
 
     static gameObject* getGameObject(std::string name);
 
-    static gameObject3D* LoadGameObject3D(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect = {0,0,0.1f,0.1f});
+    // Loads the word renderers for dialogue
+    static WordRenderer* LoadWordRenderer(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, int font_size, SDL_Color color);
+    static WordRenderer* getWordRenderer(std::string name);
 
-    static gameObject3D* getGameObject3D(std::string name);
+    static std::vector<std::string> LoadDialogue(const char *file_path, std::string name);
+    static std::vector<std::string> getDialogue(std::string name);
 
-    // load texture from surface used for text
-    static Texture2D loadTextureFromSDL2Surface(SDL_Surface* Surface);
     // properly de-allocates all loaded resources
     static void      Clear();
 private:

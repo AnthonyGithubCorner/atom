@@ -11,23 +11,22 @@
 #include "common/shader.hpp"
 #include "common/resourceManager.hpp"
 #include "baseClasses/gameClass.hpp"
-#include "common/spriteRenderer.hpp"
 #include "UI/dialogue/dialogue.hpp"
 #include "UI/dialogue/word_renderer/word_renderer.hpp"
 #include "UI/buttons/buttonClass.hpp"
 #include "load_asset/loadAsset.hpp"
-
+#include "common/Camera.hpp"
+#include "interactionFile/stateManager.hpp"
+#include "interactionFile/actionLoader.hpp"
 
 // Include GLM
 #include <glm/glm.hpp>
 using namespace glm;
 
-// The Width of the screen
-const int SCREEN_WIDTH = 1080;
-// The height of the screen
-const int SCREEN_HEIGHT = 720;
+
 
 Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
 int main(int argc, char *argv[])
 {
@@ -85,46 +84,48 @@ int main(int argc, char *argv[])
             printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
         }
     }
+
+//    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
     SDL_Color black;
     black.a = 0;
     black.r = 0;
     black.g = 0;
     black.b = 0;
-
-    WordRenderer *basic_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 16, black);
-    if(basic_word_renderer == nullptr){
-        SDL_Log("Asset didn't load");
-        return -1;
-    }
-    SDL_Color purple;
-    purple.a = 0;
-    purple.r = 100;
-    purple.g = 0;
-    purple.b = 100;
-    WordRenderer *button_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 16, purple);
-    if(button_word_renderer == nullptr){
-        SDL_Log("Asset didn't load");
-        return -1;
-    }
-    SDL_Color red;
-    red.a = 0;
-    red.r = 200;
-    red.g = 0;
-    red.b = 0;
-    WordRenderer *excited_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 36, red);
-    if(excited_word_renderer == nullptr){
-        SDL_Log("Asset didn't load");
-        return -1;
-    }
+//
+//    WordRenderer *basic_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 16, black);
+//    if(basic_word_renderer == nullptr){
+//        SDL_Log("Asset didn't load");
+//        return -1;
+//    }
+//    SDL_Color purple;
+//    purple.a = 0;
+//    purple.r = 100;
+//    purple.g = 0;
+//    purple.b = 100;
+//    WordRenderer *button_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 16, purple);
+//    if(button_word_renderer == nullptr){
+//        SDL_Log("Asset didn't load");
+//        return -1;
+//    }
+//    SDL_Color red;
+//    red.a = 0;
+//    red.r = 200;
+//    red.g = 0;
+//    red.b = 0;
+//    WordRenderer *excited_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 36, red);
+//    if(excited_word_renderer == nullptr){
+//        SDL_Log("Asset didn't load");
+//        return -1;
+//    }
 
 
     //move word renderers init to here
-    Dialogue *dialogue_test = new Dialogue(load_asset("/dialogue/idea.txt").c_str());
-    if(dialogue_test == nullptr){
-        SDL_Log("Asset didn't load");
-        return -1;
-    }
+//    Dialogue *dialogue_test = new Dialogue(load_asset("/dialogue/idea.txt").c_str());
+//    if(dialogue_test == nullptr){
+//        SDL_Log("Asset didn't load");
+//        return -1;
+//    }
         // OpenGL configuration
     // --------------------
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -149,6 +150,7 @@ int main(int argc, char *argv[])
     gameObject * temp;
     int startPosX, startPosY = 0;
     int deltaPosX, deltaPosY = 0;
+    Camera::setCamera(0.0f, 0.0f);
     while (!quit)
     {
         while (SDL_PollEvent(&e))
@@ -156,7 +158,6 @@ int main(int argc, char *argv[])
             // manage user input
             // -----------------
             // Breakout.ProcessInput(deltaTime);
-
             if (e.type == SDL_QUIT)
             {
                 quit = true;
@@ -165,15 +166,15 @@ int main(int argc, char *argv[])
 
                 SDL_GetMouseState(&xpos, &ypos);
 
+//
+//					temp = ResourceManager::getGameObject("frogGuy");
+//					float rot = -((xpos / (float) SCREEN_WIDTH) * 180.0f);
+//					temp->setRotation(rot);
 
-					temp = ResourceManager::getGameObject("frog");
-					float rot = -((xpos / (float) SCREEN_WIDTH) * 180.0f);
-					temp->setRotation(rot);
-
-					temp = ResourceManager::getGameObject("bg");
-					float xTrans = ((xpos / (float) SCREEN_WIDTH * 0.5f)
-							- temp->renderRect.w / 2);
-					temp->setX(xTrans);
+//					temp = ResourceManager::getGameObject("bg");
+//					float xTrans = ((xpos / (float) SCREEN_WIDTH * 0.5f)
+//							- temp->renderRect.w / 2);
+//					temp->setX(xTrans);
 
 
             }
@@ -185,17 +186,67 @@ int main(int argc, char *argv[])
                     quit = true;
                     break;
                 case SDLK_a:
-                    temp = ResourceManager::getGameObject("frog");
-                    temp->setRotation(temp->rotation + 20.0f);
+                	stateManager::setState("KEYA");
+//                    temp = ResourceManager::getGameObject("frogGuy");
+//                    temp->setRotation(temp->rotation + 20.0f);
                     break;
                 case SDLK_d:
-                    temp = ResourceManager::getGameObject("frog");
-                    temp->setRotation(temp->rotation - 20.0f);
+                	stateManager::setState("KEYD");
+//                    temp = ResourceManager::getGameObject("frogGuy");
+//                    temp->setRotation(temp->rotation - 20.0f);
                     break;
+                case SDLK_e:
+                	stateManager::setState("KEYE");
+                	break;
+                case SDLK_r:
+                	stateManager::setState("KEYR");
+                	break;
+                case SDLK_f:
+                	stateManager::setState("KEYF");
+                	break;
+                case SDLK_s:
+                	stateManager::setState("KEYS");
+                	break;
+                case SDLK_w:
+                	stateManager::setState("KEYW");
+                	break;
                 default:
                     break;
                 }
                 
+            }
+            else if (e.type == SDL_KEYUP)
+            {
+                switch (e.key.keysym.sym)
+                {
+                case SDLK_q:
+                    quit = true;
+                    break;
+                case SDLK_a:
+                	stateManager::clearState("KEYA");
+                    break;
+                case SDLK_d:
+                	stateManager::clearState("KEYD");
+                    break;
+                case SDLK_e:
+                	stateManager::clearState("KEYE");
+                	break;
+                case SDLK_r:
+                	stateManager::clearState("KEYR");
+                	break;
+                case SDLK_f:
+                	stateManager::clearState("KEYF");
+                    break;
+                case SDLK_w:
+                	stateManager::clearState("KEYW");
+                    break;
+                case SDLK_s:
+                	stateManager::clearState("KEYS");
+                	break;
+                default:
+                    break;
+                }
+
             }
             buttons = SDL_GetMouseState(&x, &y);
             // SDL_Log("Mouse cursor is at %d, %d", x, y);
@@ -209,19 +260,54 @@ int main(int argc, char *argv[])
             }
 
         }
-
         
+
+
         // update game state
         // -----------------
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//        ResourceManager::getGameObject("bg")->Render();
-        // ResourceManager::getGameObject("face")->Render();
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        for(auto go : Breakout.activeGameObjects){
+        	if(go->enableRender)
+        	{
+        		go->Render();
+        	}
+        }
+
+
+        for(auto interaction : Breakout.activeInteractions){
+        	if(interaction.first->enableActions)
+        	{
+        		interaction.second->executeFile(interaction.first);
+        	}
+        }
+
+//        ResourceManager::getGameObject("bg")->Render();
+//        // ResourceManager::getGameObject("face")->Render();
 //        ResourceManager::getGameObject("frog")->Render();
 //        SDL_FRect textRect = {0.1f, 0.4f, 0.8f, 0.7f};
-//        dialogue_test->render_dialogue(textRect, Breakout.Renderer,window,basic_word_renderer, button_word_renderer, excited_word_renderer);
+
 //        ResourceManager::getGameObject3D("testModel")->setColor(glm::vec3(0.5f,0.3f,0.2f));
-        ResourceManager::getGameObject3D("testModel")->Render();
+
+
+//        ResourceManager::getGameObject3D("testModel")->Render();
+        // Some Functions that are truely global are best left outside a iFile
+        if(stateManager::getState("EXT_FULLSCREEN"))
+        {
+        	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+            SDL_GetWindowSize(window,&SCREEN_WIDTH, &SCREEN_HEIGHT);
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        }
+        else
+        {
+        	SDL_SetWindowFullscreen(window, 0);
+            SDL_GetWindowSize(window,&SCREEN_WIDTH, &SCREEN_HEIGHT);
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        }
+
+//    	stateManager::clearState("KEYFPRESSED");
+        SDL_Delay(1);
+
         // Update screen
         
         
@@ -230,18 +316,16 @@ int main(int argc, char *argv[])
         SDL_GL_SwapWindow(window);
 
         
-
-        SDL_Delay(16);
     }
 
     // glDeleteTextures(1, &tex);
 
     // glDeleteProgram(shader.ID);
     ResourceManager::Clear();
-    delete button_word_renderer;
-    delete basic_word_renderer;
-    delete excited_word_renderer;
-    delete dialogue_test;
+//    delete button_word_renderer;
+//    delete basic_word_renderer;
+//    delete excited_word_renderer;
+//    delete dialogue_test;
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();

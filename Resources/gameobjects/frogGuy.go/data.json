@@ -1,0 +1,10 @@
+{
+    "name": "frogGuy",
+    "type": "3D",
+    "x": 0.0,
+    "y": 0.5,
+    "w": 0.3,
+    "h": 0.3,
+    "level": 6,
+    "anim": false
+}

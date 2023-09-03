@@ -8,45 +8,34 @@
 #include "dialogue.hpp"
 #include "word_renderer/word_renderer.hpp"
 #include "../buttons/buttonClass.hpp"
+#include "../../common/resourceManager.hpp"
 
 int current_line = 1;
+
 void _change_line(int line){
         current_line = line;
 }
-
-Dialogue::Dialogue(const char *dialogue_path){
-    //rewrite this some point
-    std::ifstream file(dialogue_path);
-    if(file.fail()){
-        SDL_Log("file not found");
-        return;
-    }
-    std::string line; 
-    while (std::getline(file, line))
-    {
-        _lines.push_back(line);
-    }
-
-    //reset Dialogue. Only one dialogue allowed at a time or else they overwrite this variable bad design fix later
-    current_line = 1;
-    file.close();
-}
-
-
-void Dialogue::render_dialogue(SDL_FRect textBox, SpriteRenderer *renderer, SDL_Window *window,WordRenderer *word_renderer, WordRenderer *button_renderer, WordRenderer *excited_renderer = nullptr)
+SDL_FRect textBox = {0.1f, 0.4f, 0.8f, 0.7f};
+std::string text_box_name = "textBox";
+void render_dialogue(int height, int width, std::string dialogue_name, std::string word_renderer_name, std::string button_renderer_name, std::string excited_renderer_name)
 {
+
+    WordRenderer* word_renderer = ResourceManager::getWordRenderer(word_renderer_name);
+    WordRenderer* button_renderer = ResourceManager::getWordRenderer(button_renderer_name);
+    WordRenderer* excited_renderer = ResourceManager::getWordRenderer(excited_renderer_name);
+    std::vector<std::string> _lines = ResourceManager::getDialogue(dialogue_name);
+
     SDL_Rect currentViewportRect;
     
-    ResourceManager::getGameObject("textBox")->renderRect = textBox;
-    ResourceManager::getGameObject("textBox")->Render();
+    ResourceManager::getGameObject(text_box_name)->renderRect = textBox;
+    ResourceManager::getGameObject(text_box_name)->Render();
     // assign viewport
     float currentx = textBox.x + 0.05f;
     float currenty = textBox.y + 0.15f;
-    SDL_GetWindowSize(window,&currentViewportRect.w, &currentViewportRect.h);
 
     SDL_FRect rect;
-    float relativeWidth = (float)word_renderer->font_width/currentViewportRect.w;
-    float relativeHeight = (float)word_renderer->font_heigth/currentViewportRect.h;
+    float relativeWidth = (float)word_renderer->font_width/width;
+    float relativeHeight = (float)word_renderer->font_heigth/height;
     // size of each character
     rect.x = currentx;
     rect.y = currenty;
@@ -122,7 +111,7 @@ void Dialogue::render_dialogue(SDL_FRect textBox, SpriteRenderer *renderer, SDL_
             }
 
 
-            current_word_renderer->render_word(wordToAdd, &rect, renderer); // rect.x + rect.w here for some reason
+            current_word_renderer->render_word(wordToAdd, &rect); // rect.x + rect.w here for some reason
         }
     }
 

@@ -17,12 +17,29 @@
 #include "SDL_surface.h"
 #include <SDL_image.h>
 
+// TODO find a better home
+// The Width of the screen
+int SCREEN_WIDTH = 1000;
+// The height of the screen
+int SCREEN_HEIGHT = 1000;
 // Instantiate static variables
+std::map<std::string, ModelRenderer*>    ResourceManager::ModelRenderers;
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::map<std::string, gameObject*>       ResourceManager::gameObjects;
-std::map<std::string, gameObject3D*>       ResourceManager::gameObjects3D;
+std::map<std::string, WordRenderer*> ResourceManager::WordRenderers;
+std::map<std::string, std::vector<std::string>> ResourceManager::Dialogues;
 
+ModelRenderer* ResourceManager::LoadModelRenderer(Shader &shader, const char *modelOBJfile, std::string name)
+{
+	ModelRenderers[name] = new ModelRenderer(shader, modelOBJfile);
+    return ModelRenderers[name];
+}
+
+ModelRenderer* ResourceManager::GetModelRenderer(std::string name)
+{
+    return ModelRenderers[name];
+}
 
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
 {
@@ -46,30 +63,70 @@ Texture2D ResourceManager::GetTexture(std::string name)
     return Textures[name];
 }
 
-gameObject* ResourceManager::LoadGameObject(SpriteRenderer *spriteRender, const char *file, bool alpha, std::string name, SDL_FRect initRect)
+gameObject* ResourceManager::LoadGameObject(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect, uint8_t level)
 {
     LoadTexture(file, alpha, name);
-    gameObjects[name] = new gameObject(spriteRender, name, initRect);
+    gameObjects[name] = new gameObject(modelRender, name, initRect, level);
 
     return gameObjects[name];
 }
+
+
+gameObject* ResourceManager::LoadGameObject(ModelRenderer *modelRender, std::map<std::string, std::vector<ModelRenderer*>> model_animations, const char *file, bool alpha, std::string name, SDL_FRect initRect, uint8_t level, SDL_FRect triggerRect)
+{
+    LoadTexture(file, alpha, name);
+    gameObjects[name] = new gameObject(modelRender, model_animations, name, initRect, level, triggerRect);
+
+    return gameObjects[name];
+}
+
 gameObject* ResourceManager::getGameObject(std::string name){
     return gameObjects[name];
 }
 
-gameObject3D* ResourceManager::LoadGameObject3D(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect)
+WordRenderer* ResourceManager::LoadWordRenderer(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, int font_size, SDL_Color color)
 {
-    LoadTexture(file, alpha, name);
-    gameObjects3D[name] = new gameObject3D(modelRender, name, initRect);
+	 LoadTexture(file, alpha, name);
+	 WordRenderers[name] = new WordRenderer(modelRender, file, font_size, color);
 
-    return gameObjects3D[name];
+	 return WordRenderers[name];
 }
-gameObject3D* ResourceManager::getGameObject3D(std::string name){
-    return gameObjects3D[name];
+
+WordRenderer* ResourceManager::getWordRenderer(std::string name)
+{
+	 return WordRenderers[name];
+}
+
+std::vector<std::string> ResourceManager::LoadDialogue(const char *file_path, std::string name)
+{
+	std::vector<std::string> _lines;
+	std::ifstream file(file_path);
+	if(file.fail()){
+		SDL_Log("file not found");
+	}
+	std::string line;
+	while (std::getline(file, line))
+	{
+		_lines.push_back(line);
+	}
+
+	 Dialogues[name] = _lines;
+	 file.close();
+
+
+	 return Dialogues[name];
+}
+
+std::vector<std::string> ResourceManager::getDialogue(std::string name)
+{
+	 return Dialogues[name];
 }
 
 void ResourceManager::Clear()
 {
+    for (auto iter : ModelRenderers)
+        delete (iter.second);
+
     // (properly) delete all shaders	
     for (auto iter : Shaders)
         glDeleteProgram(iter.second.ID);
@@ -78,7 +135,8 @@ void ResourceManager::Clear()
         glDeleteTextures(1, &iter.second.ID);
     for (auto iter : gameObjects)
         delete (iter.second);
-    for (auto iter : gameObjects3D)
+
+    for (auto iter : WordRenderers)
         delete (iter.second);
 }
 
@@ -154,26 +212,4 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
 	return texture;
 }
 
-Texture2D ResourceManager::loadTextureFromSDL2Surface(SDL_Surface* Surface)
-{
-    // create texture object
-    Texture2D texture;
-    Uint8 colors = Surface->format->BytesPerPixel;
-    if (colors == 4) {   // alpha
-                texture.Internal_Format = GL_RGBA;
-                texture.Image_Format = GL_RGBA;
-        
-    }
-    else {             // no alpha
-            texture.Internal_Format = GL_RGB;
-            texture.Image_Format = GL_RGB;
-        
-    }
-    texture.Filter_Max = GL_LINEAR;
-    texture.Filter_Min = GL_LINEAR;
-    // now generate texture
-    texture.Generate(Surface->w, Surface->h, Surface->pixels);
-    SDL_FreeSurface(Surface);
-    // and finally free image data
-    return texture;
-}
+

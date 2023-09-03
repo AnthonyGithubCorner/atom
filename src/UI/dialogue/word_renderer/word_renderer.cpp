@@ -5,8 +5,10 @@
 #include "andaleInfo.h"
 
 std::string usedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.?,!-";
-WordRenderer::WordRenderer(const char *font_path, int font_size, SDL_Color color){
-    font = IMG_Load(font_path);
+WordRenderer::WordRenderer(ModelRenderer *modelRender, const char *font_path, int font_size, SDL_Color color){
+
+	modelRenderer = modelRender;
+	font = IMG_Load(font_path);
 
     SDL_Rect charRect = {0};
     fontColor = color;
@@ -26,7 +28,7 @@ WordRenderer::WordRenderer(const char *font_path, int font_size, SDL_Color color
                     &charRect,
                     temp,
                     NULL);
-        _font_database[(char)c.charValue] = ResourceManager::loadTextureFromSDL2Surface(temp);
+        _font_database[(char)c.charValue] = loadTextureFromSDL2Surface(temp);
     }
 
     // for(int i=0; i<usedCharacters.length();i++){
@@ -36,10 +38,10 @@ WordRenderer::WordRenderer(const char *font_path, int font_size, SDL_Color color
     // }
 }
 
-void WordRenderer::render_word(std::string word, SDL_FRect *position, SpriteRenderer *renderer){
+void WordRenderer::render_word(std::string word, SDL_FRect *position){
     for(int i=0; i<word.length();i++){
         if(word[i] != ' '){
-        renderer->DrawSprite(_font_database[word[i]], glm::vec2(position->x, position->y), glm::vec2(position->w, position->h), 0, glm::vec3(fontColor.r, fontColor.g,fontColor.b));
+        	modelRenderer->DrawModel(_font_database[word[i]], glm::vec2(position->x, position->y), glm::vec3(position->w, position->h, 1.0f), 255, 0, glm::vec3(fontColor.r, fontColor.g,fontColor.b));
         }
         // space them out
         position->x += position->w;

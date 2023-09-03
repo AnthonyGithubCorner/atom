@@ -32,3 +32,27 @@ std::string load_asset(const char * asset_relative_path){
 	#endif
     return asset_full_path;
 }
+
+Texture2D loadTextureFromSDL2Surface(SDL_Surface* Surface)
+{
+    // create texture object
+    Texture2D texture;
+    Uint8 colors = Surface->format->BytesPerPixel;
+    if (colors == 4) {   // alpha
+                texture.Internal_Format = GL_RGBA;
+                texture.Image_Format = GL_RGBA;
+
+    }
+    else {             // no alpha
+            texture.Internal_Format = GL_RGB;
+            texture.Image_Format = GL_RGB;
+
+    }
+    texture.Filter_Max = GL_LINEAR;
+    texture.Filter_Min = GL_LINEAR;
+    // now generate texture
+    texture.Generate(Surface->w, Surface->h, Surface->pixels);
+    SDL_FreeSurface(Surface);
+    // and finally free image data
+    return texture;
+}

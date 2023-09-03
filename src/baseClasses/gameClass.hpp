@@ -1,6 +1,6 @@
 #include "../common/gameObject.hpp"
-#include "../common/gameObject3D.hpp"
 #include <vector>
+#include "../interactionFile/iFileParser.hpp"
 // Represents the current state of the game
 enum GameState {
     GAME_ACTIVE,
@@ -11,9 +11,7 @@ enum GameState {
 class Game
 {
     public:
-        SpriteRenderer  *Renderer;
-        SpriteRenderer  *TextRenderer;
-        ModelRenderer   *Renderer3D;
+        ModelRenderer  *Renderer;
         // game state
         GameState    State;	
         bool         Keys[1024];
@@ -27,6 +25,21 @@ class Game
         void ProcessInput(float dt);
         void Update(float dt);
         void Render();
-    private:
+        void parse_sprite_data(std::string data_path);
         std::vector<gameObject *> activeGameObjects;
+        std::vector<std::pair<gameObject*, iFileParser*>> activeInteractions;
+
+        // Interactions are the one dark horse their deletion is handled outside resourceManager because the conent of resource manager are ideally acessed by iFiles
+        std::map<std::string, std::pair<gameObject*, iFileParser*>>       interactions;
+
+        std::pair<gameObject*, iFileParser*> LoadInteraction(const char *iFile, gameObject *objectToAffect, std::string name)
+        {
+        	interactions[name] = {objectToAffect, new iFileParser(iFile)};
+        	return interactions[name];
+        }
+
+
+    private:
+
+
 };

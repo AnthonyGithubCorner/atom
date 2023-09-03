@@ -1,19 +1,64 @@
-#include "resourceManager.hpp"
 #include "gameObject.hpp"
-gameObject::gameObject(SpriteRenderer *spriteRender, std::string name, SDL_FRect initRect)
+
+#include "resourceManager.hpp"
+#include <SDL.h>
+
+gameObject::gameObject(ModelRenderer *modelRender, std::string name, SDL_FRect initRect, int Level, float IntoScreenStretch)
 {
     objName = name;
-    spriteRenderer = spriteRender;
+    currentModelRenderer = modelRender;
     renderRect = initRect;
     rotation = 0;
-} 
+    if(intoScreenStretch==-1.0f){
+    	IntoScreenStretch = initRect.h;
+    }
+    intoScreenStretch = IntoScreenStretch;
+    level = Level;
+
+}
+
+gameObject::gameObject(ModelRenderer *modelRender, std::map<std::string, std::vector<ModelRenderer*>> model_animations, std::string name, SDL_FRect initRect, int Level, SDL_FRect initTrigRect, float IntoScreenStretch)
+{
+    objName = name;
+    currentModelRenderer = modelRender;
+    renderRect = initRect;
+    rotation = 0;
+    if(intoScreenStretch==-1.0f){
+    	IntoScreenStretch = initRect.h;
+    }
+    intoScreenStretch = IntoScreenStretch;
+    level = Level;
+    animations = model_animations;
+    frame_index = 0;
+    triggerRect = initTrigRect;
+
+}
+
+
 void gameObject::Render()
 {
     Texture2D myTex;
     myTex = ResourceManager::GetTexture(objName);
-    spriteRenderer->DrawSprite(myTex,glm::vec2(renderRect.x, renderRect.y), glm::vec2(renderRect.w, renderRect.h), rotation, color);
-} 
+    currentModelRenderer->DrawModel(myTex,glm::vec2(renderRect.x, renderRect.y), glm::vec3(renderRect.w, renderRect.h, intoScreenStretch), level, rotation, color);
+}
+
+void gameObject::selectAnim(std::string anim_name)
+{
+	frame_index = 0;
+	cur_animation = animations[anim_name];
+	currentModelRenderer = cur_animation[frame_index];
+}
+
+void gameObject::nextFrame()
+{
+	frame_index++;
+	if(cur_animation.size() <= frame_index)
+	{
+		frame_index = 0;
+	}
+	currentModelRenderer = cur_animation[frame_index];
+}
 
 gameObject::~gameObject()
 {
-} 
+}
