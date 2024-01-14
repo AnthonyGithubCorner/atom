@@ -12,7 +12,8 @@
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
-glm::mat4 proj = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -255.0f, 255.0f);
+glm::mat4 proj = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -255.0f, 0.0f);
+//glm::mat4 proj = glm::frustum(0.0f, 1.0f, 1.0f, 0.0f, -10000.0f, -255.0f);
 
 void Game::parse_sprite_data(std::string data_path){
 
@@ -32,7 +33,7 @@ void Game::parse_sprite_data(std::string data_path){
 //	    ResourceManager::GetShader(name.c_str()).Use().SetInteger("image", 0);
 //
 //
-//	     ResourceManager::GetShader(name.c_str()).SetMatrix4("projection", proj);
+	     ResourceManager::GetShader(name.c_str()).SetMatrix4("projection", proj);
 	     Shader myShader = ResourceManager::GetShader("sprite");
 		 std::string type = sprite_data["type"];
 		 SDL_FRect pos = {0.0f};
@@ -54,6 +55,11 @@ void Game::parse_sprite_data(std::string data_path){
 		 bool anim = sprite_data["anim"];
 	   ModelRenderer* DRenderer = ResourceManager::LoadModelRenderer(myShader, (data_path + "/" + name + ".obj").c_str(), name);
 	   gameObject *newGo;
+	   bool isUI = false;
+	   if(type == "UI")
+	   {
+		   isUI = true;
+	   }
 	   if(anim)
 	   {
 	   std::map<std::string, std::vector<ModelRenderer*>> model_animations;
@@ -235,6 +241,10 @@ void Game::Init()
     ResourceManager::LoadWordRenderer(Renderer, load_asset("/andaleAtlas.png").c_str(), true, "andaleInfoRed", 16, red);
 
     ResourceManager::LoadDialogue(load_asset("/dialogue/idea.txt").c_str(), "test_idea");
+
+    ResourceManager::LoadSound(load_asset("/sounds/hold-it.mp3").c_str(), "holdIt");
+
+    ResourceManager::LoadMusic(load_asset("/song.mp3").c_str(), "testSong");
 
 //    ResourceManager::LoadGameObject(Renderer,load_asset("/frogGuy.png").c_str(),true,"frog", {0.3f,0.1f,0.4f, 0.4f});
 //

@@ -19,7 +19,7 @@ struct timer
 class GameTime
 {
 public:
-	// TODO REWRITE TO BE BETTER
+
 	 static int startTime();
 	 static unsigned long long getTime(int timerID);
 	 static void restartTime(int timerID);

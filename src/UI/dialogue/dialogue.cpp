@@ -6,20 +6,31 @@
 #include <fstream>
 #include <vector>
 #include "dialogue.hpp"
-#include "word_renderer/word_renderer.hpp"
+#include "word_renderer.hpp"
 #include "../buttons/buttonClass.hpp"
 #include "../../common/resourceManager.hpp"
+#include "../../interactionFile/stateManager.hpp"
 
 int current_line = 1;
-
+int rendered_line = 0;
 void _change_line(int line){
         current_line = line;
 }
+
 SDL_FRect textBox = {0.1f, 0.4f, 0.8f, 0.7f};
 std::string text_box_name = "textBox";
+bool firstRender = false;
 void render_dialogue(int height, int width, std::string dialogue_name, std::string word_renderer_name, std::string button_renderer_name, std::string excited_renderer_name)
 {
-
+	if(rendered_line != current_line)
+	{
+		firstRender = true;
+	}
+	else
+	{
+		firstRender = false;
+	}
+	rendered_line = current_line;
     WordRenderer* word_renderer = ResourceManager::getWordRenderer(word_renderer_name);
     WordRenderer* button_renderer = ResourceManager::getWordRenderer(button_renderer_name);
     WordRenderer* excited_renderer = ResourceManager::getWordRenderer(excited_renderer_name);
@@ -48,6 +59,7 @@ void render_dialogue(int height, int width, std::string dialogue_name, std::stri
 
     if (current_line != 0)
     {
+
         std::istringstream iss(_lines[current_line-1]);
         std::string wordToAdd;
         std::string tempWord;
@@ -103,6 +115,25 @@ void render_dialogue(int height, int width, std::string dialogue_name, std::stri
                 }
                 wordToAdd.push_back(' ');
             }
+            else if(wordToAdd == "$")
+            {
+                           iss >> tempWord;
+                           // set next word
+                           if(firstRender)
+                           {
+                           stateManager::setState(tempWord);
+                           }
+
+//                           while(tempWord != "*"){
+//                               wordToAdd.push_back(' ');
+//                               wordToAdd.append(tempWord);
+//                               iss >> tempWord;
+//                               if(iss.eof()){
+//                                   break;
+//                               }
+//                           }
+                           continue; // Don't render any word
+                       }
             else{
                 current_word_renderer=word_renderer;
                 // add space to end

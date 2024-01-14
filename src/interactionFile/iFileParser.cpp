@@ -12,6 +12,7 @@
 
 
 
+
 int constantTime(int prev_delay)
 {
 	return prev_delay;
@@ -22,6 +23,7 @@ int setUpTime(int prev_delay, int step_up)
 	return prev_delay + step_up;
 }
 
+std::vector<std::string> delay_words;
 
 iFileParser::iFileParser(const char *iFile_path)
 {
@@ -48,9 +50,10 @@ iFileParser::~iFileParser()
 	// TODO Auto-generated destructor stub
 }
 
-void iFileParser::setLocalState(std::string state)
+Uint32 iFileParser::setLocalState(std::string state)
 {
 	localStates[state] = true;
+	return 0;
 }
 bool iFileParser::getLocalAndGlobalState(std::string state)
 {
@@ -258,22 +261,48 @@ void iFileParser::executeFile(gameObject *object)
 			else if (nextWord == "SET")
 			{
 				iss >> nextWord;
-				setLocalState(nextWord);
+
+					setLocalState(nextWord);
+
 			}
 			else if (nextWord == "CLEAR")
 			{
 				iss >> nextWord;
 				clearLocalState(nextWord);
+
+
 			}
 			else if (nextWord == "SETG")
 			{
 				iss >> nextWord;
-				stateManager::setState(nextWord);
+				if(nextWord == "DELAY"){
+					iss >> nextWord;
+					Uint32 Delay = std::stoi(nextWord);
+					iss >> nextWord;
+					delay_words.push_back(nextWord);
+					SDL_AddTimer(Delay, &stateManager::setState, const_cast<char *>(delay_words.back().c_str()));
+					delay_words.pop_back();
+				}
+				else{
+					stateManager::setState(nextWord);
+				}
+
 			}
 			else if (nextWord == "CLEARG")
 			{
 				iss >> nextWord;
-				stateManager::clearState(nextWord);
+				if(nextWord == "DELAY"){
+					iss >> nextWord;
+					Uint32 Delay = std::stoi(nextWord);
+					iss >> nextWord;
+					delay_words.push_back(nextWord);
+					SDL_AddTimer(Delay, &stateManager::clearState, const_cast<char *>(delay_words.back().c_str()));
+					delay_words.pop_back();
+				}
+				else{
+					stateManager::clearState(nextWord);
+				}
+
 			}
 			else if (nextWord == "EXCIN")
 			{

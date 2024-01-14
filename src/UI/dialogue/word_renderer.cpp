@@ -2,7 +2,8 @@
 #include "word_renderer.hpp"
 #include <SDL.h>
 #include <string>
-#include "andaleInfo.h"
+
+#include "andaleInfo.hpp"
 
 std::string usedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.?,!-";
 WordRenderer::WordRenderer(ModelRenderer *modelRender, const char *font_path, int font_size, SDL_Color color){
@@ -41,7 +42,7 @@ WordRenderer::WordRenderer(ModelRenderer *modelRender, const char *font_path, in
 void WordRenderer::render_word(std::string word, SDL_FRect *position){
     for(int i=0; i<word.length();i++){
         if(word[i] != ' '){
-        	modelRenderer->DrawModel(_font_database[word[i]], glm::vec2(position->x, position->y), glm::vec3(position->w, position->h, 1.0f), 255, 0, glm::vec3(fontColor.r, fontColor.g,fontColor.b));
+        	modelRenderer->DrawModel(_font_database[word[i]], glm::vec2(position->x, position->y), glm::vec3(position->w, position->h, 1.0f), 255, glm::vec3(0), glm::vec3(fontColor.r, fontColor.g,fontColor.b));
         }
         // space them out
         position->x += position->w;

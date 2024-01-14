@@ -7,6 +7,7 @@ class Camera
 {
 public:
 	static glm::mat4 camera_pos;
+	static glm::vec3 camera_rot;
 	static void setCamera(float x, float y);
 private:
 	Camera() {};

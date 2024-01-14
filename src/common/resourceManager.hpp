@@ -16,11 +16,13 @@
 
 #include "texture.hpp"
 #include "shader.hpp"
+#include "sound.hpp"
+#include "music.hpp"
 #include "gameObject.hpp"
 #include "animatedGameObject.hpp"
 #include "SDL_surface.h"
 #include "gameObject.hpp"
-#include "../UI/dialogue/word_renderer/word_renderer.hpp"
+#include "../UI/dialogue/word_renderer.hpp"
 
 // A static singleton ResourceManager class that hosts several
 // functions to load Textures and Shaders. Each loaded texture
@@ -40,6 +42,8 @@ public:
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
     static std::map<std::string, gameObject*> gameObjects;
+    static std::map<std::string, Sound*>       Sounds;
+    static std::map<std::string, Music*>       Musics;
     static std::map<std::string, WordRenderer*> WordRenderers;
     static std::map<std::string, std::vector<std::string>> Dialogues;
 
@@ -54,6 +58,12 @@ public:
     static Texture2D LoadTexture(const char *file, bool alpha, std::string name);
     // retrieves a stored texture
     static Texture2D GetTexture(std::string name);
+
+    static Sound* LoadSound(const char *file, std::string name);
+    static Sound* getSound(std::string name);
+
+    static Music* LoadMusic(const char *file, std::string name);
+    static Music* getMusic(std::string name);
 
     // Loads the gameobjects
     static gameObject* LoadGameObject(ModelRenderer *modelRender, const char *file, bool alpha, std::string name, SDL_FRect initRect, uint8_t level);

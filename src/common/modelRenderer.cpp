@@ -33,9 +33,9 @@ ModelRenderer::~ModelRenderer()
 }
 
 void ModelRenderer::DrawModel(Texture2D &texture, glm::vec2 position,
-		glm::vec3 size, uint8_t level, float rotate, glm::vec3 color)
+		glm::vec3 size, uint8_t level, glm::vec3 rotate, glm::vec3 color)
 {
-
+//	rotate = 0.5f;
 //    	glEnable(GL_DEPTH_TEST);
 	// prepare transformations
 	    this->shader.Use();
@@ -52,10 +52,15 @@ void ModelRenderer::DrawModel(Texture2D &texture, glm::vec2 position,
 
 //	      // model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate y axis
 //	      model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate y axis
-	      	     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.5f*size.z)); // move origin of rotation to center of quad
+	      	     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, -0.5f*size.z)); // move origin of rotation to center of quad
 
-	      model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 1.0f, 0.0f)); // then rotate z axis
-     	   model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, -0.5f*size.z)); // move origin back
+	      model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // then rotate z axis
+     	   model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.5f*size.z)); // move origin back
+
+    	     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, -0.5f*size.z)); // move origin of rotation to center of quad
+
+    	     model = glm::rotate(model, glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f)); // then rotate z axis
+    	     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.5f*size.z)); // move origin back
 	      model = glm::scale(model, size); // last scale
 //	      model = glm::scale(model, glm::vec3(1.0f, -1.0f, 1.0f)); // flip upside down
 //	      model = glm::rotate(

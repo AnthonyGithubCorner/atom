@@ -12,20 +12,25 @@ renderDialogue( test_idea )
 enableRender( frogGuy )
 ENDIF
 
+IF PLAYEFFECT
+playSoundEffect( holdIt )
+playMusic( testSong )
+CLEARG PLAYEFFECT
+ENDIF
+
 IF KEYR AND GSTARTDIALOGUE
 SET ENDDIALOGUE
 ENDIF
 
 IF GSTARTDIALOGUE
-disableRender( player )
-disableActions( player )
-disableRender( bg )
-disableRender( orb )
+# disableRender( player )
+# disableActions( player )
+# disableRender( bg )
+# disableRender( orb )
 ENDIF
 
 IF ENDDIALOGUE
-# set back to start of dialogue
-changeLine( 1 )
+changeLine( 1 ) # set back to start of dialogue
 enableRender( bg )
 enableRender( orb )
 enableRender( player )

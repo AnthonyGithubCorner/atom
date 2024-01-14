@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include "word_renderer/word_renderer.hpp"
+#include "word_renderer.hpp"
 
 void render_dialogue(int height, int width, std::string dialogue_name, std::string word_renderer_name, std::string button_renderer_name, std::string excited_renderer_name);
 

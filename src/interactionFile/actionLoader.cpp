@@ -3,6 +3,7 @@
 #include "../common/resourceManager.hpp"
 #include "../UI/dialogue/dialogue.hpp"
 
+
 std::map<std::string, void(*)(gameObject*, std::string)> actionLoader::actions;
 std::map<std::string, bool(*)(gameObject*, std::string)> actionLoader::conds;
 
@@ -26,7 +27,7 @@ void changeLine(gameObject* object, std::string line)
 
 void changeRotate(gameObject* object, std::string rotate)
 {
-	object->rotation = (std::stof(rotate));
+	object->rotation = (object->rotation + std::stof(rotate));
 }
 
 void setX(gameObject* object, std::string floatX)
@@ -117,10 +118,16 @@ void printTriggerRect(gameObject* object, std::string objTriggerName)
 	SDL_Log("X Object: %s", std::to_string(object->renderRect.x).c_str());
 }
 
-void fullscreen(gameObject* object, std::string null)
+void playSoundEffect(gameObject* object, std::string musicName)
 {
-
+	ResourceManager::getSound(musicName)->play();
 }
+
+void playMusic(gameObject* object, std::string musicName)
+{
+	ResourceManager::getMusic(musicName)->play();
+}
+
 
 bool checkTrigger(gameObject* object, std::string objTriggerName)
 {
@@ -164,8 +171,8 @@ void actionLoader::registerAllActions()
 //	registerFunc("changeRotate", changeRotate);
 //	registerFunc("changeRotate", changeRotate);
 //	registerFunc("changeRotate", changeRotate);
-//	registerFunc("changeRotate", changeRotate);
-
+	registerFunc("playMusic", playMusic);
+	registerFunc("playSoundEffect", playSoundEffect);
 	registerFunc("changeLine", changeLine);
 	registerFunc("changeRotate", changeRotate);
 	registerFunc("setRotate", setRotate);

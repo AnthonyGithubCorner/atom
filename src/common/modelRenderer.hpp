@@ -26,7 +26,7 @@ public:
     // Destructor
     ~ModelRenderer();
     // Renders a defined quad textured with given sprite
-    void DrawModel(Texture2D &texture, glm::vec2 position, glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f), uint8_t level=0, float rotate = 0.0f, glm::vec3 color = glm::vec3(1.0f));
+    void DrawModel(Texture2D &texture, glm::vec2 position, glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f), uint8_t level=0, glm::vec3 rotate = glm::vec3(0.0f), glm::vec3 color = glm::vec3(1.0f));
 	void changeModelData(const char *modelOBJfile);
 private:
     // Render state

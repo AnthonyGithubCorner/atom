@@ -1,18 +1,18 @@
 You approach a D 20 bizarre abandoned building D on your D 18 day walk D D 2 ... D
-[ A shy ampfiphian like creature waddles up to you D 3 ... D ]
-Hey D 4 buddy! D This is my swamp.
+$ PLAYEFFECT [ A shy ampfiphian like creature waddles up to you D 3 ... D ]
+Hey $ PLAYEFFECT D 4 buddy! D This is my swamp.
 Yah I'm talking to you, D 5 weird hairry man. D I said! D 9 Get out of my swamp! D
 [You feel quite offended by this gesture tell the creature: / D 6 You are not hairy D / D 6 You are not a man D / ]
 Okay well whatever you are you're D 7 disgusting D ape D 9 get out of my swamp! D
 Hey! What you call me why I. [ The creature begins attacking your feet, its tiny slimy hands, D 8 tickling D your feet. ]
-Hey what's so D 15 funny! D [ He is getting visibly angry now better D 16 calm down D ]
+Hey what's so D 15 funny! D  [ He is getting visibly angry now better D 16 calm down D ]
 Yah that's right this is my D 10 swamp. D
 What do you mean this looks like an D 11 abandoned D building. This is a swamp. [ He clearly seems to be suffering from some sort of D 12 delusion D ]
 My best guess as to why it's abandoned is that there is no one here except me cause unlike a certain D 21 someone D they got it through their thick skull that this is my D 13 home. D
 [ Best just do D 14 what it says D ]
 Yes how many times to I have to repeat this is my home! And your D 14 not welcomed D
 Okay finally you best be going now, bye bye, aurevour, asta lavista ! THE END * (Press the R Key to return to the walking section)
-Me! Well I ought a, he takes out a magical pistol and strikes you through the heart ! THE END * (Press the R Key to return to the walking section)
+Me!  Well I ought a, he takes out a magical pistol and strikes you through the heart ! THE END * (Press the R Key to return to the walking section)
 Okay, Okay, now I'm asking you D 15 one more time D , D 9 get out of my swamp! D
 
 It's a habit you developed young, always D 19 walking from place to place D , one day it will lead you to D 2 trouble. D

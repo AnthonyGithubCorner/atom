@@ -12,7 +12,7 @@
 #include "common/resourceManager.hpp"
 #include "baseClasses/gameClass.hpp"
 #include "UI/dialogue/dialogue.hpp"
-#include "UI/dialogue/word_renderer/word_renderer.hpp"
+#include "UI/dialogue/word_renderer.hpp"
 #include "UI/buttons/buttonClass.hpp"
 #include "load_asset/loadAsset.hpp"
 #include "common/Camera.hpp"
@@ -23,6 +23,11 @@
 #include <glm/glm.hpp>
 using namespace glm;
 
+//includ imgui
+//TODO Make this optional
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl2.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 
 Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -33,7 +38,7 @@ int main(int argc, char *argv[])
     // Initialise GLEW
     glewExperimental = true; // Needed for core profile
                              // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER ) < 0)
     {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return -1;
@@ -92,6 +97,18 @@ int main(int argc, char *argv[])
     black.r = 0;
     black.g = 0;
     black.b = 0;
+
+    // TODO make this optional
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplSDL2_InitForOpenGL(window, gContext);
+    ImGui_ImplOpenGL3_Init();
 //
 //    WordRenderer *basic_word_renderer = new WordRenderer(load_asset("/andaleAtlas.png").c_str(), 16, black);
 //    if(basic_word_renderer == nullptr){
@@ -153,8 +170,14 @@ int main(int argc, char *argv[])
     Camera::setCamera(0.0f, 0.0f);
     while (!quit)
     {
+    	// TODO Make optional
+    	ImGui_ImplOpenGL3_NewFrame();
+    	ImGui_ImplSDL2_NewFrame();
+    	ImGui::NewFrame();
+    	ImGui::ShowDemoWindow();
         while (SDL_PollEvent(&e))
         {
+        	ImGui_ImplSDL2_ProcessEvent(&e); // Forward your event to backend
             // manage user input
             // -----------------
             // Breakout.ProcessInput(deltaTime);
@@ -267,12 +290,6 @@ int main(int argc, char *argv[])
         // -----------------
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for(auto go : Breakout.activeGameObjects){
-        	if(go->enableRender)
-        	{
-        		go->Render();
-        	}
-        }
 
 
         for(auto interaction : Breakout.activeInteractions){
@@ -282,6 +299,12 @@ int main(int argc, char *argv[])
         	}
         }
 
+        for(auto go : Breakout.activeGameObjects){
+        	if(go->enableRender)
+        	{
+        		go->Render();
+        	}
+        }
 //        ResourceManager::getGameObject("bg")->Render();
 //        // ResourceManager::getGameObject("face")->Render();
 //        ResourceManager::getGameObject("frog")->Render();
@@ -305,8 +328,12 @@ int main(int argc, char *argv[])
             glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
 
+        // TODO Make optional
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 //    	stateManager::clearState("KEYFPRESSED");
-        SDL_Delay(1);
+//        SDL_Delay(1);
 
         // Update screen
         
@@ -326,6 +353,9 @@ int main(int argc, char *argv[])
 //    delete basic_word_renderer;
 //    delete excited_word_renderer;
 //    delete dialogue_test;
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();

@@ -38,7 +38,7 @@ public:
 	iFileParser(const char *iFile_path);
 	void executeFile(gameObject* object);
 	virtual ~iFileParser();
-	 void setLocalState(std::string state);
+	Uint32 setLocalState(std::string state);
 	 bool getLocalAndGlobalState(std::string state);
 	 void clearLocalState(std::string state);
 private:

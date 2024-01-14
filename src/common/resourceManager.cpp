@@ -1,11 +1,3 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #include "resourceManager.hpp"
 
 #include <iostream>
@@ -26,9 +18,33 @@ int SCREEN_HEIGHT = 1000;
 std::map<std::string, ModelRenderer*>    ResourceManager::ModelRenderers;
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
+std::map<std::string, Sound*>       ResourceManager::Sounds;
+std::map<std::string, Music*>       ResourceManager::Musics;
 std::map<std::string, gameObject*>       ResourceManager::gameObjects;
 std::map<std::string, WordRenderer*> ResourceManager::WordRenderers;
 std::map<std::string, std::vector<std::string>> ResourceManager::Dialogues;
+
+Sound* ResourceManager::LoadSound(const char *file, std::string name)
+{
+	Sounds[name] = new Sound(file);
+	return Sounds[name];
+}
+
+Sound* ResourceManager::getSound(std::string name)
+{
+	return Sounds[name];
+}
+
+Music* ResourceManager::LoadMusic(const char *file, std::string name)
+{
+	Musics[name] = new Music(file);
+	return Musics[name];
+}
+
+Music* ResourceManager::getMusic(std::string name)
+{
+	return Musics[name];
+}
 
 ModelRenderer* ResourceManager::LoadModelRenderer(Shader &shader, const char *modelOBJfile, std::string name)
 {
@@ -137,6 +153,9 @@ void ResourceManager::Clear()
         delete (iter.second);
 
     for (auto iter : WordRenderers)
+        delete (iter.second);
+
+    for (auto iter : Sounds)
         delete (iter.second);
 }
 

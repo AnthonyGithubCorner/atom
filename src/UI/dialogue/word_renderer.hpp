@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <SDL.h>
 #include <SDL_image.h>
-#include "../../../common/modelRenderer.hpp"
+#include "../../common/modelRenderer.hpp"
 
 class WordRenderer{
     public:

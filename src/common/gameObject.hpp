@@ -11,6 +11,7 @@
 #include <vector>
 
 
+
 class gameObject
 {
 public:
@@ -40,6 +41,7 @@ public:
     std::map<std::string, std::vector<ModelRenderer*>> animations;
 	bool enableActions = true;
 	bool enableRender = true;
+	bool UI;
 private:
     std::vector<ModelRenderer*> cur_animation;
     int frame_index = 0;

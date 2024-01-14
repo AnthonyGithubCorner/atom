@@ -1,5 +1,6 @@
 
 IF START
+setRotate( 0 )
 selectAnim( idle )
 FUNC stopr
 SET STOPPING
@@ -79,7 +80,6 @@ IF NOTMOVING AND KEYD
 IF !STOPPING
 CLEAR STOPRIGHT
 CLEAR NOTMOVING
-setRotate( 180 )
 selectAnim( run )
 EXCIN anim constant -1 10
 EXCIN moveright constant -1 1
@@ -90,7 +90,6 @@ IF NOTMOVING AND KEYA
 IF !STOPPING
 CLEAR STOPLEFT
 CLEAR NOTMOVING
-setRotate( 0 )
 selectAnim( run )
 EXCIN anim constant -1 10
 EXCIN moveleft constant -1 1

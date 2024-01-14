@@ -9,10 +9,7 @@
 
 std::map<std::string, bool>       stateManager::globalStates;
 
- void stateManager::setState(std::string state)
- {
-	 globalStates[state] = true;
- }
+
  bool stateManager::getState(std::string state)
  {
 	 bool returnValue;
@@ -39,7 +36,24 @@ std::map<std::string, bool>       stateManager::globalStates;
 	 }
 	 return returnValue;
  }
- void stateManager::clearState(std::string state)
+ Uint32 stateManager::setState(Uint32 x, void * state)
+  {
+	 char *s = static_cast<char *>(state);
+	 std::string str(s);
+ 	 globalStates[str] = true;
+  }
+ Uint32 stateManager::setState(std::string state)
+  {
+ 	 globalStates[state] = true;
+  }
+
+ Uint32 stateManager::clearState(Uint32 x, void * state)
+  {
+	 char *s = static_cast<char *>(state);
+	 std::string str(s);
+ 	 globalStates[str] = false;
+  }
+ Uint32 stateManager::clearState(std::string state)
  {
 	 globalStates[state] = false;
  }
