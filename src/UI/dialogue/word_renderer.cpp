@@ -19,12 +19,13 @@ WordRenderer::WordRenderer(ModelRenderer *modelRender, const char *font_path, in
     format = font->format;
     // float scale = 0.5;
     for(auto c:rtpDescAtlas){
-        SDL_Surface *temp = SDL_CreateRGBSurface( font->flags, charRect.w , charRect.h, format->BitsPerPixel,
-                                                    format->Rmask, format->Gmask, format->Bmask, format->Amask );
         charRect.x = c.positionX;
         charRect.y = c.positionY;
         charRect.w = c.sourceWidth + c.charOffsetX; // from looking at font
         charRect.h = c.sourceHeight; // from looking at font
+        SDL_Surface *temp = SDL_CreateRGBSurface( font->flags, charRect.w , charRect.h, format->BitsPerPixel,
+                                                    format->Rmask, format->Gmask, format->Bmask, format->Amask );
+ 
         SDL_BlitSurface(font,
                     &charRect,
                     temp,

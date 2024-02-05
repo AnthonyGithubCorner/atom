@@ -2,8 +2,6 @@ IF START
 setRotate( 0 )
 CLEAR ENDDIALOGUE
 disableRender( frogGuy )
-setX( 0.3 )
-setY( 0.1 )
 CLEAR START
 ENDIF
 

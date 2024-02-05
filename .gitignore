@@ -3,3 +3,7 @@
 /DebugMacOS/
 /DebugMac/
 /packagedBuild/
+/build/
+/atom.app/
+/Frameworks/
+.DS_Store

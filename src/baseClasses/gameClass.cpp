@@ -1,4 +1,5 @@
 #include "gameClass.hpp"
+#include "../common/sceneInterpretter.hpp"
 #include "../common/resourceManager.hpp"
 #include "../load_asset/loadAsset.hpp"
 #include <filesystem>
@@ -13,7 +14,7 @@
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 glm::mat4 proj = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -255.0f, 0.0f);
-//glm::mat4 proj = glm::frustum(0.0f, 1.0f, 1.0f, 0.0f, -10000.0f, -255.0f);
+glm::mat4 proj_3D = glm::ortho(0.0f, 10.0f, 10.0f, 0.0f, -15.0f, 100.0f);
 
 void Game::parse_sprite_data(std::string data_path){
 
@@ -33,8 +34,6 @@ void Game::parse_sprite_data(std::string data_path){
 //	    ResourceManager::GetShader(name.c_str()).Use().SetInteger("image", 0);
 //
 //
-	     ResourceManager::GetShader(name.c_str()).SetMatrix4("projection", proj);
-	     Shader myShader = ResourceManager::GetShader("sprite");
 		 std::string type = sprite_data["type"];
 		 SDL_FRect pos = {0.0f};
 		 pos.x = sprite_data["x"];
@@ -53,12 +52,18 @@ void Game::parse_sprite_data(std::string data_path){
 
 		 uint8_t level = sprite_data["level"];
 		 bool anim = sprite_data["anim"];
-	   ModelRenderer* DRenderer = ResourceManager::LoadModelRenderer(myShader, (data_path + "/" + name + ".obj").c_str(), name);
 	   gameObject *newGo;
-	   bool isUI = false;
+	   ModelRenderer* DRenderer;
+	   Shader myShader;
 	   if(type == "UI")
 	   {
-		   isUI = true;
+		myShader = ResourceManager::GetShader("sprite");
+		DRenderer = ResourceManager::LoadModelRenderer(myShader, (data_path + "/" + name + ".obj").c_str(), name);
+	   }
+	   else if(type == "3D")
+	   {
+	    myShader = ResourceManager::GetShader("model");
+		DRenderer = ResourceManager::LoadModelRenderer(myShader, (data_path + "/" + name + ".obj").c_str(), name);
 	   }
 	   if(anim)
 	   {
@@ -117,9 +122,8 @@ void Game::parse_sprite_data(std::string data_path){
 	   activeGameObjects.push_back(newGo);
 	   }
 	   activeInteractions.push_back(LoadInteraction((data_path + "/" + name + ".i").c_str(), newGo, name));
-//	    for (auto &sprite_tile : sprite_data["buildings"].items()){
-//	        tile_char_path = sprite_tile.value()["file"];
-//	    }
+	   newGo->enableActions = false;
+	   newGo->enableRender = false;
 }
 
 
@@ -151,13 +155,18 @@ void Game::Init()
      // Looping until all the items of the directory are
      // exhausted
      ResourceManager::LoadShader(load_asset("vertex").c_str(), load_asset("fragment").c_str(), nullptr, "sprite");
+     ResourceManager::LoadShader(load_asset("vertex").c_str(), load_asset("fragment").c_str(), nullptr, "model");
      // configure shaders
  //
+      glm::mat4 view = glm::mat4(1.0f);
      ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
      ResourceManager::GetShader("sprite").SetMatrix4("projection", proj);
-     glm::mat4 view = glm::mat4(1.0f);
-//     view = glm::translate(view, glm::vec3(0.5f,0.0f,0.0f));
      ResourceManager::GetShader("sprite").SetMatrix4("view", view);
+ 
+  	      ResourceManager::GetShader("model").Use().SetInteger("image", 0);   
+	 ResourceManager::GetShader("model").SetMatrix4("projection", proj_3D);
+//     view = glm::translate(view, glm::vec3(0.5f,0.0f,0.0f));
+	      ResourceManager::GetShader("model").SetMatrix4("view", view);
      // set render-specific controls
      Shader myShader;
      myShader = ResourceManager::GetShader("sprite");
@@ -245,7 +254,7 @@ void Game::Init()
     ResourceManager::LoadSound(load_asset("/sounds/hold-it.mp3").c_str(), "holdIt");
 
     ResourceManager::LoadMusic(load_asset("/song.mp3").c_str(), "testSong");
-
+	sceneInterpretter scene(load_asset("example.scene").c_str());
 //    ResourceManager::LoadGameObject(Renderer,load_asset("/frogGuy.png").c_str(),true,"frog", {0.3f,0.1f,0.4f, 0.4f});
 //
 //    // load models

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <SDL.h>
+
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 // Include GLEW. Always include it before gl.h and glfw3.h, since it's a bit magic.
@@ -26,15 +27,16 @@ using namespace glm;
 //includ imgui
 //TODO Make this optional
 #include "imgui/imgui.h"
-#include "imgui/imgui_impl_sdl2.h"
+ #include "imgui/imgui_impl_sdl2.h"
 #include "imgui/imgui_impl_opengl3.h"
-
 
 Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
 int main(int argc, char *argv[])
 {
+    // load from file path.
+    resource_path = argv[1];
     // Initialise GLEW
     glewExperimental = true; // Needed for core profile
                              // Initialize SDL

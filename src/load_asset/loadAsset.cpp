@@ -4,6 +4,7 @@
 
 //taken from here https://www.willusher.io/sdl2%20tutorials/2014/06/16/postscript-0-properly-finding-resource-paths
 
+std::string resource_path;
 
 std::string load_asset(const char * asset_relative_path){
     #ifdef _WIN32
@@ -12,7 +13,7 @@ std::string load_asset(const char * asset_relative_path){
     #else
 	//Assuming MacOS App is Packaged
 	const char PATH_SEP = '/';
-    static std::string base_dir;
+    static std::string base_dir = resource_path;
 	if (base_dir.empty()){
 		//SDL_GetBasePath will return NULL if something went wrong in retrieving the path
 		char *base_path_search = SDL_GetBasePath();

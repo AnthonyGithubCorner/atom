@@ -1,8 +1,6 @@
 
 
 IF START
-setX( 0.8 )
-setY( 0.5 )
 selectAnim( popup )
 CLEAR ANIMRAN
 CLEAR START

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "../include/SOIL.h"
+#include "SOIL.h"
 #include "../load_asset/loadAsset.hpp"
 #include "SDL_surface.h"
 #include <SDL_image.h>
@@ -13,7 +13,7 @@
 // The Width of the screen
 int SCREEN_WIDTH = 1000;
 // The height of the screen
-int SCREEN_HEIGHT = 1000;
+int SCREEN_HEIGHT = 500;
 // Instantiate static variables
 std::map<std::string, ModelRenderer*>    ResourceManager::ModelRenderers;
 std::map<std::string, Texture2D>    ResourceManager::Textures;

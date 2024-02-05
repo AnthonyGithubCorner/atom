@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "(lldb) Launch",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/test",
+        "args": [
+          "${workspaceFolder}/Resources/test/"
+        ],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "showDisplayString": false,
+        "environment": [],
+        "MIMode": "lldb",
+        "logging": {
+          "moduleLoad": false,
+          "programOutput": true,
+          "trace": false
+        },
+        "preLaunchTask": "CMake: build",
+        "osx": {
+          "MIMode": "lldb"
+        }
+      }
+    ]
+  }
