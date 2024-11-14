@@ -20,10 +20,12 @@ public:
 	json scene_data;
 	sceneInterpretter(const char *scene);
 	void startScene();
+	bool isModified();
     // Destructor
 
+std::string  path_file; 
     // ~sceneInterpretter();
-
-
+private:
+	time_t time_last_updated = 0;
 };
 

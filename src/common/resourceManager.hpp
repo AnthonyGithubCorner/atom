@@ -24,13 +24,13 @@
 // handles. All functions and resources are static and no 
 // public constructor is defined.
 // The Width of the screen
-extern int SCREEN_WIDTH;
-// The height of the screen
-extern int SCREEN_HEIGHT;
 
 class ResourceManager
 {
 public:
+static int SCREEN_WIDTH;
+// The height of the screen
+static int SCREEN_HEIGHT;
     // resource storage
     static std::map<std::string, ModelRenderer*> ModelRenderers;
     static std::map<std::string, Shader>    Shaders;
@@ -41,7 +41,7 @@ public:
     static std::map<std::string, WordRenderer*> WordRenderers;
     static std::map<std::string, std::vector<std::string>> Dialogues;
 static std::map<std::string, sceneInterpretter*> scenes;
- sceneInterpretter* current_scene;
+static sceneInterpretter* current_scene;
     static ModelRenderer* LoadModelRenderer(Shader &shader, const char *modelOBJfile, std::string name);
     static ModelRenderer* GetModelRenderer(std::string name);
 

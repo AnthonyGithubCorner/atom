@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        for(auto interaction : activeInteractions){
+        for(auto interaction : Breakout.activeInteractions){
         	if(interaction.first->enableActions)
         	{
                 if(interaction.second->active)
@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
             }
 
             // reload scene file
-        	ResourceManager::current_scene->switchTo();
+        	ResourceManager::current_scene->startScene();
         }
 
         #endif

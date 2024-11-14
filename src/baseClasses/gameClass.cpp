@@ -15,7 +15,6 @@ namespace fs = std::filesystem;
 using json = nlohmann::json;
 glm::mat4 proj = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -255.0f, 0.0f);
 glm::mat4 proj_3D = glm::frustum(0.0f, 10.0f, 10.0f, 0.0f, -15.0f, 100.0f);
-std::vector<std::map<gameObject, iFileParser>> activeInteractions;
 
 std::string get_file_name_from_path(std::string path){	
 	std::string base_filename = path.substr(path.find_last_of("/\\") + 1);
@@ -37,8 +36,8 @@ void Game::parse_setting_data(std::string data_path)
 	json sprite_data = json::parse(spirte_file);
 	
 	std::string startScene = sprite_data["startUpScene"];
-	SCREEN_HEIGHT = sprite_data["height"];
-	SCREEN_WIDTH = sprite_data["width"];
+	ResourceManager::SCREEN_HEIGHT = sprite_data["height"];
+	ResourceManager::SCREEN_WIDTH = sprite_data["width"];
 	ResourceManager::switch_scene(ResourceManager::GetSceneInterpretter(startScene));
 }
 
@@ -48,7 +47,7 @@ void Game::parse_sprite_data(std::string data_path)
 	std::ifstream spirte_file(data_path + "/data.json");
 	if (spirte_file.fail())
 	{
-		SDL_Log("json data file not found");
+		SDL_Log("json data file not found. Object: %s", data_path.c_str());
 		return;
 	}
 	std::string name = get_file_name_from_path(data_path);

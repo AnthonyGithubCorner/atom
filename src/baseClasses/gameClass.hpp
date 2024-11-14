@@ -14,6 +14,7 @@ class Game
     public:
         ModelRenderer  *Renderer;
 
+        std::vector<std::pair<gameObject*, iFileParser*>> activeInteractions;
         // game state
         GameState    State;	
         bool         Keys[1024];

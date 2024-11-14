@@ -11,9 +11,9 @@
 
 // TODO find a better home
 // The Width of the screen
-int SCREEN_WIDTH = 1000;
+int ResourceManager::SCREEN_WIDTH = 1000;
 // The height of the screen
-int SCREEN_HEIGHT = 500;
+int ResourceManager::SCREEN_HEIGHT = 500;
 // Instantiate static variables
 std::map<std::string, ModelRenderer*>    ResourceManager::ModelRenderers;
 std::map<std::string, Texture2D>    ResourceManager::Textures;
@@ -24,11 +24,18 @@ std::map<std::string, gameObject*>       ResourceManager::gameObjects;
 std::map<std::string, WordRenderer*> ResourceManager::WordRenderers;
 std::map<std::string, sceneInterpretter*> ResourceManager::scenes;
 std::map<std::string, std::vector<std::string>> ResourceManager::Dialogues;
-sceneInterpretter* current_scene;
+sceneInterpretter* ResourceManager::current_scene;
 
 sceneInterpretter* ResourceManager::switch_scene(sceneInterpretter* new_scene)
 {
-	new_scene.startScene();
+	current_scene = new_scene;
+	SDL_Log("switching scene to %s", current_scene->path_file.c_str());
+	    for (auto iter : gameObjects)
+		{
+                iter.second->enableActions = false;
+                iter.second->enableRender = false;
+            }
+	current_scene->startScene();
 }
 
 sceneInterpretter* ResourceManager::LoadSceneInterpretter(const char *file, std::string name)
@@ -171,6 +178,8 @@ void ResourceManager::Clear()
         delete (iter.second);
 
     for (auto iter : WordRenderers)
+        delete (iter.second);
+    for (auto iter : scenes)
         delete (iter.second);
 
     for (auto iter : Sounds)

@@ -9,30 +9,29 @@ std::map<std::string, bool(*)(gameObject*, std::string)> actionLoader::conds;
 
 
 
-std::map<std::string, timer> delayTimerStarted; // assumes only one timer can be set for one state
 
 void setRotate(gameObject* object, std::string rotate)
 {
-	object->rotation.x = (std::stof(rotate));
+	object->rotation = (std::stof(rotate));
 }
 
 
 void changeRotate(gameObject* object, std::string rotate)
 {
-	object->rotation.x += (std::stof(rotate));
+	object->rotation += (std::stof(rotate));
 }
 
 
-void setRotateY(gameObject* object, std::string rotate)
-{
-	object->rotation.y = (std::stof(rotate));
-}
+//void setRotateY(gameObject* object, std::string rotate)
+//{
+//	object->rotation.y = (std::stof(rotate));
+//}
+//
 
-
-void changeRotateY(gameObject* object, std::string rotate)
-{
-	object->rotation.y += (std::stof(rotate));
-}
+//void changeRotateY(gameObject* object, std::string rotate)
+//{
+//	object->rotation.y += (std::stof(rotate));
+//}
 
 void changeLine(gameObject* object, std::string line)
 {
@@ -74,26 +73,26 @@ void nextFrame(gameObject* object, std::string unused)
 	object->nextFrame();
 }
 
-void setAfterDelay(gameObject* object, std::string params)
-{
-	std::string delay;
-	std::string state;
-	std::istringstream iss(params);
-	iss >> delay >> state;
-	if(!delayTimerStarted[state].started)
-	{
-		delayTimerStarted[state].started = true;
-		delayTimerStarted[state].startTime = SDL_GetTicks64();
-	}
-	else
-	{
-		if(SDL_GetTicks64() - delayTimerStarted[state].startTime >= std::stoi(delay))
-		{
-			stateManager::setState(state);
-			delayTimerStarted[state].started = false;
-		}
-	}
-}
+// void setAfterDelay(gameObject* object, std::string params)
+//{
+//	std::string delay;
+//	std::string state;
+//	std::istringstream iss(params);
+//	iss >> delay >> state;
+//	if(!delayTimerStarted[state].started)
+//	{
+//		delayTimerStarted[state].started = true;
+//		delayTimerStarted[state].startTime = SDL_GetTicks64();
+//	}
+//	else
+//	{
+//		if(SDL_GetTicks64() - delayTimerStarted[state].startTime >= std::stoi(delay))
+//		{
+//			stateManager::setState(state);
+//			delayTimerStarted[state].started = false;
+//		}
+//	}
+//}
 
 void toggleInLinearTime(gameObject* object, std::string floatX)
 {
@@ -193,8 +192,8 @@ void actionLoader::registerAllActions()
 	registerFunc("playSoundEffect", playSoundEffect);
 	registerFunc("changeLine", changeLine);
 	// registerFunc("changeRotate", changeRotate);
-	registerFunc("setRotateY", setRotateY);
-	registerFunc("changeRotateY", changeRotateY);
+//	registerFunc("setRotateY", setRotateY);
+//	registerFunc("changeRotateY", changeRotateY);
 	registerFunc("setRotate", setRotate);
 	registerFunc("changeRotate", changeRotate);
 	registerFunc("printTriggerRect", printTriggerRect);
@@ -209,7 +208,7 @@ void actionLoader::registerAllActions()
 	registerFunc("changeY", changeY);
 	registerFunc("setX", setX);
 	registerFunc("setY", setY);
-	registerFunc("setAfterDelay", setAfterDelay);
+//	registerFunc("setAfterDelay", setAfterDelay);
 
 	registerCond("checkActionEnable", checkActionEnable);
 	registerCond("checkTrigger", checkTrigger);

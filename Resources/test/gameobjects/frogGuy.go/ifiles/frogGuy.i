@@ -12,7 +12,6 @@ ENDIF
 
 IF PLAYEFFECT
 playSoundEffect( holdIt )
-playMusic( testSong )
 CLEARG PLAYEFFECT
 ENDIF
 
