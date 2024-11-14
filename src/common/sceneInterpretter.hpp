@@ -9,15 +9,19 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "../json/json.hpp"
 
-
+using json = nlohmann::json;
 
 class sceneInterpretter
 {
 public:
     // Constructor (inits shaders/shapes)
-    sceneInterpretter(const char *scene);
+	json scene_data;
+	sceneInterpretter(const char *scene);
+	void startScene();
     // Destructor
+
     // ~sceneInterpretter();
 
 

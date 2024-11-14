@@ -7,17 +7,31 @@
 std::map<std::string, void(*)(gameObject*, std::string)> actionLoader::actions;
 std::map<std::string, bool(*)(gameObject*, std::string)> actionLoader::conds;
 
-struct timer
-{
-	bool started;
-	Uint64 timeStarted;
-};
+
 
 std::map<std::string, timer> delayTimerStarted; // assumes only one timer can be set for one state
 
 void setRotate(gameObject* object, std::string rotate)
 {
-	object->rotation = (std::stof(rotate));
+	object->rotation.x = (std::stof(rotate));
+}
+
+
+void changeRotate(gameObject* object, std::string rotate)
+{
+	object->rotation.x += (std::stof(rotate));
+}
+
+
+void setRotateY(gameObject* object, std::string rotate)
+{
+	object->rotation.y = (std::stof(rotate));
+}
+
+
+void changeRotateY(gameObject* object, std::string rotate)
+{
+	object->rotation.y += (std::stof(rotate));
 }
 
 void changeLine(gameObject* object, std::string line)
@@ -25,9 +39,9 @@ void changeLine(gameObject* object, std::string line)
 	_change_line(std::stoi(line));
 }
 
-void changeRotate(gameObject* object, std::string rotate)
+void setRotateX(gameObject* object, std::string rotate)
 {
-	object->rotation = (object->rotation + std::stof(rotate));
+	// object->rotation.x = (object->rotation + std::stof(rotate));
 }
 
 void setX(gameObject* object, std::string floatX)
@@ -69,11 +83,11 @@ void setAfterDelay(gameObject* object, std::string params)
 	if(!delayTimerStarted[state].started)
 	{
 		delayTimerStarted[state].started = true;
-		delayTimerStarted[state].timeStarted = SDL_GetTicks64();
+		delayTimerStarted[state].startTime = SDL_GetTicks64();
 	}
 	else
 	{
-		if(SDL_GetTicks64() - delayTimerStarted[state].timeStarted >= std::stoi(delay))
+		if(SDL_GetTicks64() - delayTimerStarted[state].startTime >= std::stoi(delay))
 		{
 			stateManager::setState(state);
 			delayTimerStarted[state].started = false;
@@ -108,7 +122,7 @@ void enableRender(gameObject* object, std::string obj_name)
 
 void renderDialogue(gameObject* object, std::string dialogueName)
 {
-	render_dialogue(SCREEN_HEIGHT, SCREEN_WIDTH, dialogueName, "andaleInfo", "andaleInfoPurple", "andaleInfoRed");
+	render_dialogue(ResourceManager::SCREEN_HEIGHT, ResourceManager::SCREEN_WIDTH, dialogueName, "andaleInfo", "andaleInfoPurple", "andaleInfoRed");
 }
 
 void printTriggerRect(gameObject* object, std::string objTriggerName)
@@ -162,7 +176,10 @@ bool checkActionEnable(gameObject* object, std::string obj_name)
 	return ResourceManager::getGameObject(obj_name)->enableRender;
 }
 
-
+void switchScene(gameObject* object, std::string sceneName)
+{
+	ResourceManager::switch_scene(ResourceManager::GetSceneInterpretter(sceneName));
+}
 
 void actionLoader::registerAllActions()
 {
@@ -171,11 +188,15 @@ void actionLoader::registerAllActions()
 //	registerFunc("changeRotate", changeRotate);
 //	registerFunc("changeRotate", changeRotate);
 //	registerFunc("changeRotate", changeRotate);
+	registerFunc("switchScene", switchScene);
 	registerFunc("playMusic", playMusic);
 	registerFunc("playSoundEffect", playSoundEffect);
 	registerFunc("changeLine", changeLine);
-	registerFunc("changeRotate", changeRotate);
+	// registerFunc("changeRotate", changeRotate);
+	registerFunc("setRotateY", setRotateY);
+	registerFunc("changeRotateY", changeRotateY);
 	registerFunc("setRotate", setRotate);
+	registerFunc("changeRotate", changeRotate);
 	registerFunc("printTriggerRect", printTriggerRect);
 	registerFunc("renderDialogue", renderDialogue);
 	registerFunc("enableRender", enableRender);

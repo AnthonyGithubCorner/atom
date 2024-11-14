@@ -34,19 +34,27 @@ struct repetablefunc
 class iFileParser
 {
 public:
-	std::map<std::string, bool>       localStates;
+ 	std::map<std::string, bool>       localStates;
 	iFileParser(const char *iFile_path);
+	void loadFile();
+	bool isModified();
 	void executeFile(gameObject* object);
 	virtual ~iFileParser();
+	Uint32 setLocalState(gameObject *object, std::string state);
 	Uint32 setLocalState(std::string state);
-	 bool getLocalAndGlobalState(std::string state);
+	 bool getLocalAndGlobalState(gameObject *object, std::string state);
+	 void clearLocalState(gameObject *object, std::string state);
 	 void clearLocalState(std::string state);
+	 bool active = 0;
+	std::string path_file;
 private:
 	std::vector<std::string> _lines;
 	std::map<std::string, int> funcLoader;
 	std::vector<repetablefunc> funcsToExc;
 	int func_exc_index = 0;
 	int funcIDIndex = 0;
+	time_t time_last_updated = 0;
+
 
 };
 

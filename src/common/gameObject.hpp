@@ -15,6 +15,7 @@
 class gameObject
 {
 public:
+std::vector<std::string> gameobjectStates;
     // Constructor (inits shaders/shapes)
     gameObject(ModelRenderer *modelRender, std::string name, SDL_FRect initRect = {0.3f,0.3f,0.1f,0.1f}, int Level = 0, float IntoScreenStretch = -1.0f);
     gameObject(ModelRenderer *modelRender, std::map<std::string, std::vector<ModelRenderer*>> model_animations, std::string name, SDL_FRect initRect = {0.3f,0.3f,0.1f,0.1f}, int Level = 0, SDL_FRect triggerRect = {0.0f,0.0f,0.0f,0.0f}, float IntoScreenStretch = -1.0f);

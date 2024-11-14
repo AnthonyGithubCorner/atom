@@ -9,7 +9,14 @@
 
 #include "actionLoader.hpp"
 #include "stateManager.hpp"
+#include <sys/stat.h>
+#ifndef WIN32
+#include <unistd.h>
+#endif
 
+#ifdef WIN32
+#define stat _stat
+#endif
 
 
 
@@ -25,15 +32,17 @@ int setUpTime(int prev_delay, int step_up)
 
 std::vector<std::string> delay_words;
 
-iFileParser::iFileParser(const char *iFile_path)
+void iFileParser::loadFile()
 {
 	//rewrite this some point
-	std::ifstream file(iFile_path);
+
+	std::ifstream file(path_file);
 	if (file.fail())
 	{
 		SDL_Log("file not found");
 		return;
 	}
+	_lines.clear();
 	std::string line;
 	while (std::getline(file, line))
 	{
@@ -42,7 +51,38 @@ iFileParser::iFileParser(const char *iFile_path)
 
 	file.close();
 	setLocalState("START");
+	active = true;
+	struct stat result;
+	if(stat(path_file.c_str(), &result)==0)
+	{
+    	time_last_updated = result.st_mtime;
+	}
+}
+
+iFileParser::iFileParser(const char *iFile_path)
+{
+
+	path_file = iFile_path;
+	loadFile();
+
 //	registerAllActions();  // make this static
+}
+
+bool iFileParser::isModified()
+{
+	struct stat result;
+	if(stat(path_file.c_str(), &result)==0)
+	{
+    	if(time_last_updated < result.st_mtime)
+		{
+			time_last_updated = result.st_mtime;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 iFileParser::~iFileParser()
@@ -51,48 +91,75 @@ iFileParser::~iFileParser()
 }
 
 Uint32 iFileParser::setLocalState(std::string state)
-{
+{ 
 	localStates[state] = true;
 	return 0;
 }
-bool iFileParser::getLocalAndGlobalState(std::string state)
+
+Uint32 iFileParser::setLocalState(gameObject *object, std::string state)
+{
+	object->gameobjectStates[state] = true;
+	return 0;
+}
+bool iFileParser::getLocalAndGlobalState(gameObject *object, std::string state)
 {
 	 bool returnValue;
 
 	 // check localVars than return globals
 	 bool found = false;
 
-	 if (localStates.find(state)==localStates.end())
+  	 if(!found)
 	 {
-		 returnValue = false;
-	 }
-	 else
-	 {
-		 found = true;
-		 returnValue = localStates[state];
+		if (object->gameobjectStates.find(state)==object->gameobjectStates.end())
+		{
+			returnValue = false;
+		}
+		else
+		{
+			found = true;
+			returnValue = object->gameobjectStates[state];
+		}
+
+		if (object->gameobjectStates.find(state.substr(1))==object->gameobjectStates.end() && state[0] == '!')
+		{
+			returnValue = true;
+		}
 	 }
 
-	 if (localStates.find(state.substr(1))==localStates.end() && state[0] == '!')
+	 if(!found)
 	 {
-		 returnValue = true;
+		if (localStates.find(state)==localStates.end())
+		{
+			returnValue = false;
+		}
+		else
+		{
+			found = true;
+			returnValue = localStates[state];
+		}
+
+		if (localStates.find(state.substr(1))==localStates.end() && state[0] == '!')
+		{
+			returnValue = true;
+		}	
 	 }
-	 else
-	 {
-		 if(state[0] == '!')
-		 {
-			 found = true;
-			 returnValue = !localStates[state.substr(1)];
-		 }
-	 }
+
+
 	 if(!found)
 	 {
 		 returnValue = stateManager::getState(state);
 	 }
 	 return returnValue;
 }
+
 void iFileParser::clearLocalState(std::string state)
 {
 	localStates[state] = false;
+}
+
+void iFileParser::clearLocalState(gameObject *object, std::string state)
+{
+	object->gameobjectStates[state] = false;
 }
 
 void iFileParser::executeFile(gameObject *object)
@@ -132,7 +199,7 @@ void iFileParser::executeFile(gameObject *object)
 						skip = true;
 					}
 				}
-				else if(!getLocalAndGlobalState(nextWord))
+				else if(!getLocalAndGlobalState(object, nextWord))
 				{
 					skip = true;
 				}
@@ -152,7 +219,7 @@ void iFileParser::executeFile(gameObject *object)
 							skip = true;
 						}
 					}
-					else if(!getLocalAndGlobalState(nextWord))
+					else if(!getLocalAndGlobalState(object, nextWord))
 					{
 						skip = true;
 					}

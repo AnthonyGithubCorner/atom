@@ -22,7 +22,25 @@ std::map<std::string, Sound*>       ResourceManager::Sounds;
 std::map<std::string, Music*>       ResourceManager::Musics;
 std::map<std::string, gameObject*>       ResourceManager::gameObjects;
 std::map<std::string, WordRenderer*> ResourceManager::WordRenderers;
+std::map<std::string, sceneInterpretter*> ResourceManager::scenes;
 std::map<std::string, std::vector<std::string>> ResourceManager::Dialogues;
+sceneInterpretter* current_scene;
+
+sceneInterpretter* ResourceManager::switch_scene(sceneInterpretter* new_scene)
+{
+	new_scene.startScene();
+}
+
+sceneInterpretter* ResourceManager::LoadSceneInterpretter(const char *file, std::string name)
+{
+	scenes[name] = new sceneInterpretter(file);
+	return scenes[name];
+}
+
+sceneInterpretter* ResourceManager::GetSceneInterpretter(std::string name)
+{
+	return scenes[name];
+}
 
 Sound* ResourceManager::LoadSound(const char *file, std::string name)
 {

@@ -1,11 +1,3 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
@@ -20,9 +12,11 @@
 #include "music.hpp"
 #include "gameObject.hpp"
 #include "animatedGameObject.hpp"
+#include "animatedGameObject.hpp"
 #include "SDL_surface.h"
 #include "gameObject.hpp"
 #include "../UI/dialogue/word_renderer.hpp"
+#include "sceneInterpretter.hpp"
 
 // A static singleton ResourceManager class that hosts several
 // functions to load Textures and Shaders. Each loaded texture
@@ -46,7 +40,8 @@ public:
     static std::map<std::string, Music*>       Musics;
     static std::map<std::string, WordRenderer*> WordRenderers;
     static std::map<std::string, std::vector<std::string>> Dialogues;
-
+static std::map<std::string, sceneInterpretter*> scenes;
+ sceneInterpretter* current_scene;
     static ModelRenderer* LoadModelRenderer(Shader &shader, const char *modelOBJfile, std::string name);
     static ModelRenderer* GetModelRenderer(std::string name);
 
@@ -62,6 +57,9 @@ public:
     static Sound* LoadSound(const char *file, std::string name);
     static Sound* getSound(std::string name);
 
+static sceneInterpretter*  switch_scene(sceneInterpretter* new_scene);
+static sceneInterpretter*  LoadSceneInterpretter(const char *file, std::string name);
+static sceneInterpretter*  GetSceneInterpretter(std::string name);
     static Music* LoadMusic(const char *file, std::string name);
     static Music* getMusic(std::string name);
 

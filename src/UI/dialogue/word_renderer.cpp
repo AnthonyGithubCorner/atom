@@ -35,8 +35,8 @@ WordRenderer::WordRenderer(ModelRenderer *modelRender, const char *font_path, in
 
     // for(int i=0; i<usedCharacters.length();i++){
     //     temp = usedCharacters[i];
-    //     surface = TTF_RenderText_Blended(_font, temp.c_str(), color);
-    //     _font_database[usedCharacters[i]] = ResourceManager::loadTextureFromSDL2Surface(surface);
+    //     surface = TTF_RenderText_Blended(_tile, temp.c_str(), color);
+    //     _tile_database[usedCharacters[i]] = ResourceManager::loadTextureFromSDL2Surface(surface);
     // }
 }
 

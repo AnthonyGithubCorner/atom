@@ -4,7 +4,6 @@
 #include <sys/stat.h>
 #include <SDL.h>
 #include <fstream>
-#include "../json/json.hpp"
 #include "resourceManager.hpp"
 #include "sceneInterpretter.hpp"
 using json = nlohmann::json;
@@ -17,11 +16,12 @@ sceneInterpretter::sceneInterpretter(const char *scene){
 	        return;
 	    }
         json scene_data = json::parse(scene_file);
-	    std::string name = scene_data["name"];
+         }
+void sceneInterpretter::startScene()
+{
 
-		 SDL_FRect pos ={0.0f};
-	    //  std::string type = scene_data["type"];
-		 SDL_FRect trigRect = {0.0f};
+	 SDL_FRect pos ={0.0f};
+	 SDL_FRect trigRect = {0.0f};
          for(auto &it : scene_data["objects"])
          {
 	    std::string object_name = it["name"];
@@ -44,4 +44,4 @@ sceneInterpretter::sceneInterpretter(const char *scene){
 	    ResourceManager::getGameObject(object_name)->enableActions = true;
 	   ResourceManager::getGameObject(object_name)->enableRender = true;
          }
-         }
+}
